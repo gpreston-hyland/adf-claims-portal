@@ -12,3 +12,4 @@ export class GlobalValuesService {
   fnolProcess:string = 'first-notice-of-loss';
   loggedIn:boolean;
 }
+

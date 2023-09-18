@@ -2,9 +2,13 @@
 
   <adf-sidenav-layout-header>
     <ng-template let-toggleMenu="toggleMenu">
-      <adf-layout-header id="adf-header"  [title]="'Argumentum Global'" color="primary" 
+      <adf-layout-header id="adf-header"  [title]="'Argumentum Global Claims Portal'" color="primary" 
         logo="assets/images/Argumentum-icon.png" 
         (clicked)="toggleMenu($event)">
+        <div id="rightHeader" fxLayout="row">
+            {{globalValues.currentUser}} 
+            
+        </div>
       </adf-layout-header>
     </ng-template>
   </adf-sidenav-layout-header>
@@ -20,11 +24,15 @@
                     <mat-icon matListIcon class="sidenav-menu-icon">home</mat-icon>
                     <div class="sidenav-menu-label" *ngIf="!isMenuMinimized()">Home</div>
                 </a>
-               <a mat-list-item class="adf-sidenav-link" routerLink="/apps">
+                <a mat-list-item class="adf-sidenav-link" routerLink="/newclaim">
+                    <mat-icon matListIcon class="sidenav-menu-icon" class="material-symbols-outlined">car_crash</mat-icon>
+                    <div class="sidenav-menu-label" *ngIf="!isMenuMinimized()">Start Claim</div>
+                </a>
+              <a mat-list-item class="adf-sidenav-link" routerLink="/apps" *ngIF="false">
                     <mat-icon matListIcon class="sidenav-menu-icon">cloud</mat-icon>
                     <div class="sidenav-menu-label" *ngIf="!isMenuMinimized()">Apps</div>
                 </a>
-                <a mat-list-item class="adf-sidenav-link" routerLink="/documents">
+                <a mat-list-item class="adf-sidenav-link" routerLink="/documents" *ngIf="false">
                     <mat-icon matListIcon class="sidenav-menu-icon">folder_open</mat-icon>
                     <div class="sidenav-menu-label" *ngIf="!isMenuMinimized()">Documents</div>
                 </a>
