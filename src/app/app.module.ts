@@ -31,6 +31,7 @@ import { GlobalValuesService} from './services/global-values.service';
 import { appRoutes } from './app.routes';
 import { AppLayoutComponent } from './app-layout/app-layout.component';
 import { DocumentsComponent } from './documents/documents.component';
+import { StartClaimComponent } from './start-claim/start-claim.component';
 
 @NgModule({
     imports: [
@@ -62,7 +63,8 @@ import { DocumentsComponent } from './documents/documents.component';
         AppLayoutComponent,
         BlobViewComponent,
         FileViewComponent,
-        DocumentsComponent
+        DocumentsComponent,
+        StartClaimComponent
     ],
     providers: [
         PreviewService,
