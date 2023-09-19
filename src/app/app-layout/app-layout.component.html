@@ -24,8 +24,9 @@
                     <mat-icon matListIcon class="sidenav-menu-icon">home</mat-icon>
                     <div class="sidenav-menu-label" *ngIf="!isMenuMinimized()">Home</div>
                 </a>
-                <a mat-list-item class="adf-sidenav-link" routerLink="/newclaim">
-                    <mat-icon matListIcon class="sidenav-menu-icon" class="material-symbols-outlined">car_crash</mat-icon>
+                <a mat-list-item class="adf-sidenav-link" routerLink="/apps">
+                    <div class="sidenav-menu-icon"><img height="30" width="30" src="../../assets/images/icons8-car-crash-50.png" /></div>
+                    <!-- <mat-icon matListIcon class="sidenav-menu-icon">directions_car</mat-icon> -->
                     <div class="sidenav-menu-label" *ngIf="!isMenuMinimized()">Start Claim</div>
                 </a>
               <a mat-list-item class="adf-sidenav-link" routerLink="/apps" *ngIF="false">
