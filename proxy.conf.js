@@ -21,7 +21,7 @@ module.exports = {
         changeOrigin: true,
         onProxyReq: function(request) {
             if(request["method"] !== "GET")
-                request.setHeader("origin", host);
+                request.setHeader("origin", "host");
         },
         // workaround for REPO-2260
         onProxyRes: function (proxyRes, req, res) {
