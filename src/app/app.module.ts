@@ -9,7 +9,7 @@ import { ApolloModule } from 'apollo-angular';
 
 // ADF modules
 import { ContentModule } from '@alfresco/adf-content-services';
-import { ProcessServicesCloudModule } from '@alfresco/adf-process-services-cloud';
+import { ProcessServicesCloudModule, StartProcessCloudService } from '@alfresco/adf-process-services-cloud';
 import { CoreModule, TRANSLATION_PROVIDER, TranslateLoaderService } from '@alfresco/adf-core';
 
 // Custom stencils
@@ -69,6 +69,7 @@ import { StartClaimComponent } from './start-claim/start-claim.component';
     providers: [
         PreviewService,
         GlobalValuesService,
+        StartProcessCloudService,
         {
             provide: TRANSLATION_PROVIDER,
             multi: true,

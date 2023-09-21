@@ -1,16 +1,39 @@
-<p>start-claim works!</p>
+<div id="loader-container" class="loader-container" *ngIf="isLoading">
+    <div class="loader-spinner">
+      <svg class="circular">
+        <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
+      </svg>
+    </div>
+    <div class="loader-item">
+      <div id="loader-text" class="loader-text">Preparing Claim...</div>
+    </div>
+  </div>
 
+<!-- <div id="start-process" *ngIf="bStartProcess">
 <adf-cloud-start-process
     [appName]="'claims-test'"
-    name="FNOL-GP-1"
+    name="FNOL-GP-3"
     [processDefinitionName]="'testGateways'"
     (success)="processSuccess($event)"
     (cancel)="processCancel()"
-
+    [variables]="{'claimId':'12345', 'companyName':'Ace Hardware', 'claimFolderName':'-root-/Sites/claims/documentLibrary/Commercial Auto/Acme/12345'}"
 >
-
 </adf-cloud-start-process>
-<adf-cloud-task-form 
-    [appName]="appName"
-    [taskId]="taskId">
-</adf-cloud-task-form>
+</div> -->
+
+<div id="show-results" *ngIf="bShowResults">
+    <h2>Start Process completed</h2>
+    <b>Results</b><br>
+    {{results}}
+</div>
+
+<div id="show-task-form" *ngIf="bShowTaskForm">
+  <adf-cloud-task-form 
+    [appName]="'claims-test'"
+    [taskId]="formTaskId"
+    (formCompleted)="taskFormCompleted($event)"
+    (cancelClick)="taskFormCancel($event)"
+    (error)="taskFormError($event)"
+    >
+  </adf-cloud-task-form>
+</div>
