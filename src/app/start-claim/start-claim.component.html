@@ -1,13 +1,16 @@
 <p>start-claim works!</p>
 
 <adf-cloud-start-process
-    [appName]="globalValues.appName"
+    [appName]="'claims-test'"
     name="FNOL-GP-1"
-    [processDefinitionName]="globalValues.fnolProcess"
+    [processDefinitionName]="'testGateways'"
     (success)="processSuccess($event)"
     (cancel)="processCancel()"
-    [variables]="[{'claimId':'12345','companyName':'Acme'}]"
-    [values]="[{'name':'claimFolderName','value':'/Sites/claims/documentLibrary/Commercial Auto/JIT Trucking'}]"
+
 >
 
 </adf-cloud-start-process>
+<adf-cloud-task-form 
+    [appName]="appName"
+    [taskId]="taskId">
+</adf-cloud-task-form>
