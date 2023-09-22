@@ -1,4 +1,4 @@
-<div id="loader-container" class="loader-container" *ngIf="isLoading">
+<div id="loader-container" class="loader-container" *ngIf="bIsLoading">
     <div class="loader-spinner">
       <svg class="circular">
         <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="5" stroke-miterlimit="10"></circle>
@@ -29,8 +29,9 @@
 
 <div id="show-task-form" *ngIf="bShowTaskForm">
   <adf-cloud-task-form 
-    [appName]="'claims-test'"
+    [appName]="globalValues.appName"
     [taskId]="formTaskId"
+    [showTitle]=false
     (formCompleted)="taskFormCompleted($event)"
     (cancelClick)="taskFormCancel($event)"
     (error)="taskFormError($event)"
