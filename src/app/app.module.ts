@@ -9,7 +9,7 @@ import { ApolloModule } from 'apollo-angular';
 
 // ADF modules
 import { ContentModule } from '@alfresco/adf-content-services';
-import { ProcessServicesCloudModule, StartProcessCloudService } from '@alfresco/adf-process-services-cloud';
+import { ProcessServicesCloudModule, StartProcessCloudService, ProcessTaskListCloudService } from '@alfresco/adf-process-services-cloud';
 import { CoreModule, TRANSLATION_PROVIDER, TranslateLoaderService } from '@alfresco/adf-core';
 
 // Custom stencils
@@ -26,12 +26,14 @@ import { StartProcessComponent } from './start-process/start-process.component';
 import { FileViewComponent } from './file-view/file-view.component';
 import { BlobViewComponent } from './file-view/blob-view.component';
 import { PreviewService } from './services/preview.service';
-import { GlobalValuesService} from './services/global-values.service';
+
 
 import { appRoutes } from './app.routes';
 import { AppLayoutComponent } from './app-layout/app-layout.component';
 import { DocumentsComponent } from './documents/documents.component';
+import { GlobalValuesService} from './services/global-values.service';
 import { StartClaimComponent } from './start-claim/start-claim.component';
+import { MyProcessCloudService } from './services/my-process-cloud.service';
 
 @NgModule({
     imports: [
@@ -70,6 +72,8 @@ import { StartClaimComponent } from './start-claim/start-claim.component';
         PreviewService,
         GlobalValuesService,
         StartProcessCloudService,
+        ProcessTaskListCloudService,
+        MyProcessCloudService,
         {
             provide: TRANSLATION_PROVIDER,
             multi: true,

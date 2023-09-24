@@ -7,5 +7,5 @@ import {GlobalValuesService} from '../services/global-values.service';
   styleUrls: ['./app-layout.component.scss']
 })
 export class AppLayoutComponent {
-  constructor (public globalValues:GlobalValuesService) {}
+  constructor (public globalValues:GlobalValuesService) {};
 }

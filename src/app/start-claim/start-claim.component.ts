@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router'
 import {map} from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 import {GlobalValuesService} from '../services/global-values.service';
+import {MyProcessCloudService} from '../services/my-process-cloud.service';
 
-import { ProcessInstanceCloud, ProcessPayloadCloud, StartProcessCloudService,
-         TaskListCloudService,
+import { ProcessInstanceCloud, ProcessInstanceVariable, ProcessPayloadCloud, StartProcessCloudService,
+         TaskListCloudService, ProcessTaskListCloudService,
          TaskQueryCloudRequestModel} from '@alfresco/adf-process-services-cloud';
 import { timer } from 'rxjs';
+import {poll} from 'poll';
 
 @Component({
   selector: 'app-start-claim',
@@ -20,15 +23,19 @@ export class StartClaimComponent implements OnInit {
   bShowResults: boolean = false;
   bShowTaskForm: boolean = false;
   bIsLoading: boolean = true;
+  createProcId:string;
   processId: string;
   formTaskId: string;
-
+  bTaskComplete:boolean = false;
   results:any ;
 
   constructor(public globalValues:GlobalValuesService
-      , private _router:Router
+      ,private _router:Router
       ,private _startProcCloud:StartProcessCloudService
+      ,private _procCloudService:MyProcessCloudService
       ,private _taskListCloudService:TaskListCloudService
+      ,private _processTaskListCloudService:ProcessTaskListCloudService
+      ,private http:HttpClient
     ) {    console.log('******************************* startclaimcomponent-constructor'); }
 
   ngOnInit(): void {
@@ -46,41 +53,64 @@ export class StartClaimComponent implements OnInit {
   startNewClaimProcess() {
     console.debug("********* enter startNewClaimProcess()");
 
-    var _payload: ProcessPayloadCloud = new ProcessPayloadCloud();
+    //let _payload: ProcessPayloadCloud = new ProcessPayloadCloud();
     
     // TODO: call create claim folder process
     // see https://stackoverflow.com/questions/22125865/how-to-wait-until-a-predicate-condition-becomes-true-in-javascript
+    // --- which lead to npm package 'poll' (eventually)
     // to monitor for task completion before moving on
 
+    let _payload: ProcessPayloadCloud = new ProcessPayloadCloud( {
+      name: "Create or Get ClaimFolder",
+      processDefinitionKey: this.globalValues.mvp_genClaimStructureId,
+      variables: {"companyName": "GP LLC"}
+    });
+    this.globalValues.claimNumber="not set";
 
-    // _payload = new ProcessPayloadCloud(); 
-    //Process_z-vNQpyK:42:cdb9bb1b-5885-11ee-86f3-7ab301120a4c
-   _payload.processDefinitionKey = this.globalValues.fnolProcessDefinitionId;
-   _payload.name = this.globalValues.fnolProcess.concat("-",this.globalValues.currentUser,"-",this.globalValues.claimNumber);    //'FNOL-Service-1'; //Build unique name
-   _payload.variables = {//claimId:this.globalValues.claimNumber,
-     companyName:this.globalValues.companyName, 
-     claimFolderName:this.globalValues.claimFolderName};
-   _payload.payloadType = 'StartProcessPayload';
-//    this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
-    this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
-        // this.bIsLoading = false;
-        console.log(task);
-        this.processId = task.id;
-        this.results = JSON.stringify(task);
-        timer(1000).subscribe(x => {
-          this.getFormTask();
+    console.debug("=========================start folder create _payload:", _payload);
+    this._startProcCloud.startProcess(this.globalValues.mvp_AppName,_payload).subscribe((task:ProcessInstanceCloud) => {
+      console.log(">>>>>>>>>>>>>>>>>>>>> create folder task",task," ID:", task.id);
+      this.createProcId = task.id;
+      timer(1000).subscribe(_x => {
+
+        console.debug("========================= call get process vars");
+        // getProcessInstanceById doesn't populate the variables (ProcessInstanceVariable[]) from ProcessInstanceCloud type!
+        // this._procCloudService.getProcessInstanceById("claims-comm-auto-mvp",this.createProcId).subscribe ((inst:ProcessInstanceCloud)=> {
+        this._procCloudService.getProcessInstanceVariablesById(this.globalValues.mvp_AppName,this.createProcId).subscribe ((vars:any[])=> {
+          console.debug(">>>>>>>>>>>>>>>>>>> get process vars by id return:", vars);
+
+          for(let v of vars) {
+            // console.log(v,":", typeof(v));
+            if(v.entry.name == "claimId") { this.globalValues.claimNumber = v.entry.value; }
+            else if(v.entry.name == "claimFolderName") { this.globalValues.claimFolderName = "-root-".concat(v.entry.value); }
+          }
+          console.debug(">>>>>>>>>>>>>>>>>>>>> extracted variables: ", this.globalValues.claimNumber,":",this.globalValues.claimFolderName);
+          
+          // Setup for call to 'FNOL' process
+          _payload = new ProcessPayloadCloud ({
+            processDefinitionKey: this.globalValues.ct_testGatewaysId,
+            name: this.globalValues.fnolProcess.concat("-",this.globalValues.currentUser,"-",this.globalValues.claimNumber),
+            variables: {
+              claimId:this.globalValues.claimNumber,
+              companyName:this.globalValues.companyName, 
+              claimFolderName:this.globalValues.claimFolderName
+            }
+          });
+  
+          console.debug("========================= start FNOL _payload:", _payload);
+          this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
+            console.log(">>>>>>>>>>>>>>>>> start FNOL task:", task);
+            this.processId = task.id;
+            timer(1000).subscribe(x => {
+              this.getFormTask();
+            });
+          });
         });
-        
-        // this.bShowTaskForm = true;
-      },
-      error =>{ 
-        console.error("-------------- *************** Error starting proc with cloud service");
-        this.bIsLoading = false;
-        this.results = 'Error starting proc';
-        this.bShowResults = true;
-        }
-    );   
+      });  
+    });
+ 
   }
+
 
   // ***********************************************************
   //  User Task Form functions
@@ -88,16 +118,21 @@ export class StartClaimComponent implements OnInit {
   getFormTask() {
     // console.debug("********************************** " + this.globalValues.appName);
 
-     var _formTaskQuery:TaskQueryCloudRequestModel = new TaskQueryCloudRequestModel();
+     let _formTaskQuery:TaskQueryCloudRequestModel = new TaskQueryCloudRequestModel({
+      appName: this.globalValues.ct_AppName,
+      processInstanceId: this.processId,
+      name: this.globalValues.fnolUploadTaskName
+     });
+
     //  console.debug("-------------------------------- " + this.globalValues.appName);     
-     _formTaskQuery.appName = this.globalValues.appName;
-     _formTaskQuery.processInstanceId = this.processId;
-     _formTaskQuery.name = this.globalValues.fnolUploadTaskName;
+    //  _formTaskQuery.appName = this.globalValues.appName;
+    //  _formTaskQuery.processInstanceId = this.processId;
+    //  _formTaskQuery.name = this.globalValues.fnolUploadTaskName;
 
     
 
-    console.log("============================================ begin getFormTask");
-    this._taskListCloudService.getTaskByRequest(_formTaskQuery)
+    console.log("============================================ begin getFormTask queryPayload:", _formTaskQuery);
+    this._processTaskListCloudService.getTaskByRequest(_formTaskQuery)
       .pipe(map(task => task.list.entries[0] ))
         .subscribe(
           (task) => {

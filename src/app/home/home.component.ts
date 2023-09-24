@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
     // this.userName = this.globalValues.currentUser;
     // this.isLoggedOn = this.globalValues.loggedIn;
     console.log("************** Home Component Constructor");
-  }
+  };
 
   ngOnInit(): void {
     this.globalValues.loggedIn = this.authService.isLoggedIn();
