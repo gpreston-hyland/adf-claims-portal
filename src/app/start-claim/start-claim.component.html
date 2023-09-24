@@ -5,7 +5,7 @@
       </svg>
     </div>
     <div class="loader-item">
-      <div id="loader-text" class="loader-text">Preparing Claim...</div>
+      <div id="loader-text" class="loader-text">Preparing Claim for {{globalValues.companyName}}...</div>
     </div>
   </div>
 
@@ -28,13 +28,17 @@
 </div>
 
 <div id="show-task-form" *ngIf="bShowTaskForm">
+  <p>appName: {{globalValues.appName}} <br> taskId (formTaskId): {{formTaskId}}</p>
+
   <adf-cloud-task-form 
     [appName]="globalValues.appName"
     [taskId]="formTaskId"
     [showTitle]=false
+    [showSaveButton]="false"
     (formCompleted)="taskFormCompleted($event)"
     (cancelClick)="taskFormCancel($event)"
     (error)="taskFormError($event)"
     >
   </adf-cloud-task-form>
+  
 </div>

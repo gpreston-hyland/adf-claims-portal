@@ -62,13 +62,13 @@ export class StartClaimComponent implements OnInit {
 
     let _payload: ProcessPayloadCloud = new ProcessPayloadCloud( {
       name: "Create or Get ClaimFolder",
-      processDefinitionKey: this.globalValues.mvp_genClaimStructureId,
-      variables: {"companyName": "GP LLC"}
+      processDefinitionKey: this.globalValues.genClaimStructureId,
+      variables: {"companyName": this.globalValues.companyName}
     });
     this.globalValues.claimNumber="not set";
 
     console.debug("=========================start folder create _payload:", _payload);
-    this._startProcCloud.startProcess(this.globalValues.mvp_AppName,_payload).subscribe((task:ProcessInstanceCloud) => {
+    this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
       console.log(">>>>>>>>>>>>>>>>>>>>> create folder task",task," ID:", task.id);
       this.createProcId = task.id;
       timer(1000).subscribe(_x => {
@@ -76,7 +76,7 @@ export class StartClaimComponent implements OnInit {
         console.debug("========================= call get process vars");
         // getProcessInstanceById doesn't populate the variables (ProcessInstanceVariable[]) from ProcessInstanceCloud type!
         // this._procCloudService.getProcessInstanceById("claims-comm-auto-mvp",this.createProcId).subscribe ((inst:ProcessInstanceCloud)=> {
-        this._procCloudService.getProcessInstanceVariablesById(this.globalValues.mvp_AppName,this.createProcId).subscribe ((vars:any[])=> {
+        this._procCloudService.getProcessInstanceVariablesById(this.globalValues.appName,this.createProcId).subscribe ((vars:any[])=> {
           console.debug(">>>>>>>>>>>>>>>>>>> get process vars by id return:", vars);
 
           for(let v of vars) {
@@ -88,7 +88,7 @@ export class StartClaimComponent implements OnInit {
           
           // Setup for call to 'FNOL' process
           _payload = new ProcessPayloadCloud ({
-            processDefinitionKey: this.globalValues.ct_testGatewaysId,
+            processDefinitionKey: this.globalValues.fnolProcessDefinitionId,
             name: this.globalValues.fnolProcess.concat("-",this.globalValues.currentUser,"-",this.globalValues.claimNumber),
             variables: {
               claimId:this.globalValues.claimNumber,
@@ -98,6 +98,7 @@ export class StartClaimComponent implements OnInit {
           });
   
           console.debug("========================= start FNOL _payload:", _payload);
+
           this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
             console.log(">>>>>>>>>>>>>>>>> start FNOL task:", task);
             this.processId = task.id;
@@ -119,7 +120,7 @@ export class StartClaimComponent implements OnInit {
     // console.debug("********************************** " + this.globalValues.appName);
 
      let _formTaskQuery:TaskQueryCloudRequestModel = new TaskQueryCloudRequestModel({
-      appName: this.globalValues.ct_AppName,
+      appName: this.globalValues.appName,
       processInstanceId: this.processId,
       name: this.globalValues.fnolUploadTaskName
      });
