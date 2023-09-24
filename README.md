@@ -1,6 +1,6 @@
-# ADF/APS Application with Angular CLI
+# ADF Claims Portal Application with Angular CLI
 
-Minimal ready-to-use Angular CLI project template pre-configured with ADF components.
+Allows user to 'Start a claim' and upload documents. ***Runs on port 4300,*** rather than the default of 4200.
 
 ## Quick start
 
@@ -20,7 +20,7 @@ The main focus of the project is:
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4300/`. The app will automatically reload if you change any of the source files.
 
 ### Proxy settings
 

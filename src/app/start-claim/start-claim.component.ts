@@ -10,7 +10,7 @@ import { ProcessInstanceCloud, ProcessInstanceVariable, ProcessPayloadCloud, Sta
          TaskListCloudService, ProcessTaskListCloudService,
          TaskQueryCloudRequestModel} from '@alfresco/adf-process-services-cloud';
 import { timer } from 'rxjs';
-import {poll} from 'poll';
+// import {poll} from 'poll';
 
 @Component({
   selector: 'app-start-claim',
