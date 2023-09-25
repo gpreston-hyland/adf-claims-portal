@@ -73,7 +73,7 @@ export class StartClaimComponent implements OnInit {
       this.createProcId = task.id;
       timer(1000).subscribe(_x => {
 
-        console.debug("========================= call get process vars");
+        console.debug("========================= call get process vars for processId", this.createProcId);
         // getProcessInstanceById doesn't populate the variables (ProcessInstanceVariable[]) from ProcessInstanceCloud type!
         // this._procCloudService.getProcessInstanceById("claims-comm-auto-mvp",this.createProcId).subscribe ((inst:ProcessInstanceCloud)=> {
         this._procCloudService.getProcessInstanceVariablesById(this.globalValues.appName,this.createProcId).subscribe ((vars:any[])=> {
@@ -82,7 +82,7 @@ export class StartClaimComponent implements OnInit {
           for(let v of vars) {
             // console.log(v,":", typeof(v));
             if(v.entry.name == "claimId") { this.globalValues.claimNumber = v.entry.value; }
-            else if(v.entry.name == "claimFolderName") { this.globalValues.claimFolderName = "-root-".concat(v.entry.value); }
+            else if(v.entry.name == "claimFolderName") { this.globalValues.claimFolderName = v.entry.value; }
           }
           console.debug(">>>>>>>>>>>>>>>>>>>>> extracted variables: ", this.globalValues.claimNumber,":",this.globalValues.claimFolderName);
           

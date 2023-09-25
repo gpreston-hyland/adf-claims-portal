@@ -28,7 +28,7 @@
 </div>
 
 <div id="show-task-form" *ngIf="bShowTaskForm">
-  <p>appName: {{globalValues.appName}} <br> taskId (formTaskId): {{formTaskId}}</p>
+  <p>appName: {{globalValues.appName}} <br> taskId (formTaskId): {{formTaskId}} - Claim: {{globalValues.claimNumber}} - Claim Folder: {{ globalValues.claimFolderName}}</p>
 
   <adf-cloud-task-form 
     [appName]="globalValues.appName"
