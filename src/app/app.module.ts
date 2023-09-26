@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { ApolloModule } from 'apollo-angular';
 
@@ -26,6 +27,7 @@ import { StartProcessComponent } from './start-process/start-process.component';
 import { FileViewComponent } from './file-view/file-view.component';
 import { BlobViewComponent } from './file-view/blob-view.component';
 import { PreviewService } from './services/preview.service';
+import {SubmitDialogComponent} from './submit-dialog/submit-dialog.component';
 
 
 import { appRoutes } from './app.routes';
@@ -52,7 +54,8 @@ import { MyProcessCloudService } from './services/my-process-cloud.service';
             loader: { provide: TranslateLoader, useClass: TranslateLoaderService }
         }),
         StencilsModule,
-        ApolloModule
+        ApolloModule,
+        MatDialogModule
     ],
     declarations: [
         AppComponent,
@@ -66,7 +69,8 @@ import { MyProcessCloudService } from './services/my-process-cloud.service';
         BlobViewComponent,
         FileViewComponent,
         DocumentsComponent,
-        StartClaimComponent
+        StartClaimComponent,
+        SubmitDialogComponent
     ],
     providers: [
         PreviewService,

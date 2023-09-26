@@ -5,11 +5,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 import {GlobalValuesService} from '../services/global-values.service';
 import {MyProcessCloudService} from '../services/my-process-cloud.service';
+import {SubmitDialogComponent} from '../submit-dialog/submit-dialog.component';
 
 import { ProcessInstanceCloud, ProcessInstanceVariable, ProcessPayloadCloud, StartProcessCloudService,
          TaskListCloudService, ProcessTaskListCloudService,
          TaskQueryCloudRequestModel} from '@alfresco/adf-process-services-cloud';
 import { timer } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 // import {poll} from 'poll';
 
 @Component({
@@ -35,6 +37,7 @@ export class StartClaimComponent implements OnInit {
       ,private _procCloudService:MyProcessCloudService
       ,private _taskListCloudService:TaskListCloudService
       ,private _processTaskListCloudService:ProcessTaskListCloudService
+      ,private dialog:MatDialog
       ,private http:HttpClient
     ) {    console.log('******************************* startclaimcomponent-constructor'); }
 
@@ -156,8 +159,11 @@ export class StartClaimComponent implements OnInit {
   }
 
   taskFormCompleted() {
+    const dialogRef = this.dialog.open(SubmitDialogComponent,{
+      data:{claimNumber: this.globalValues.claimNumber}
+    })
     this.bShowTaskForm = false;
-    alert("Claim documents submitted for review.");
+    // alert("Claim documents submitted for review.");
     this._router.navigateByUrl('/home');
   }
   
