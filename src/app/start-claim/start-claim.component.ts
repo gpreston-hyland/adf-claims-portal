@@ -74,7 +74,7 @@ export class StartClaimComponent implements OnInit {
     this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
       console.log(">>>>>>>>>>>>>>>>>>>>> create folder task",task," ID:", task.id);
       this.createProcId = task.id;
-      timer(1500).subscribe(_x => {
+      timer(2500).subscribe(_x => {
 
         console.debug("========================= call get process vars for processId", this.createProcId);
         // getProcessInstanceById doesn't populate the variables (ProcessInstanceVariable[]) from ProcessInstanceCloud type!
