@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router'
-import {map} from 'rxjs/operators';
+import {last, map, switchMap, takeWhile, tap} from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
 import {GlobalValuesService} from '../services/global-values.service';
@@ -74,7 +74,15 @@ export class StartClaimComponent implements OnInit {
     this._startProcCloud.startProcess(this.globalValues.appName,_payload).subscribe((task:ProcessInstanceCloud) => {
       console.log(">>>>>>>>>>>>>>>>>>>>> create folder task",task," ID:", task.id);
       this.createProcId = task.id;
-      timer(1000).subscribe(_x => {
+      
+      //poll for process complete before getting variables
+      var n:number = 0;
+      timer(0,250).pipe(
+        tap(() => console.log("polling iteration: ",++n," at ", new Date().toISOString())),
+        switchMap(_ => this._procCloudService.getProcessInstanceById(this.globalValues.appName,this.createProcId)),
+        takeWhile(p => p.status !== 'COMPLETED',true),
+        last()        
+      ).subscribe(_x => {
 
         console.debug("========================= call get process vars for processId", this.createProcId);
         // getProcessInstanceById doesn't populate the variables (ProcessInstanceVariable[]) from ProcessInstanceCloud type!
