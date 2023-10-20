@@ -31,6 +31,8 @@
     "@angular/platform-browser-dynamic": "^14.2.9",
     "@angular/router": "^14.2.9",
     "@apollo/client": "^3.3.7",
+    "@babel/core": "^7.23.2",
+    "@babel/traverse": "^7.23.2",
     "@editorjs/code": "^2.8.0",
     "@editorjs/editorjs": "^2.26.5",
     "@editorjs/header": "^2.7.0",
