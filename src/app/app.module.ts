@@ -36,6 +36,7 @@ import { DocumentsComponent } from './documents/documents.component';
 import { GlobalValuesService} from './services/global-values.service';
 import { StartClaimComponent } from './start-claim/start-claim.component';
 import { MyProcessCloudService } from './services/my-process-cloud.service';
+import { AgencyComponent } from './agency/agency.component';
 
 @NgModule({
     imports: [
@@ -70,7 +71,8 @@ import { MyProcessCloudService } from './services/my-process-cloud.service';
         FileViewComponent,
         DocumentsComponent,
         StartClaimComponent,
-        SubmitDialogComponent
+        SubmitDialogComponent,
+        AgencyComponent
     ],
     providers: [
         PreviewService,
