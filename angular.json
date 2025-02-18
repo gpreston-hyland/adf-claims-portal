@@ -134,7 +134,7 @@
           "options": {
             "browserTarget": "dist:build",
             "host":"localhost",
-            "port": 4300,
+            "port": 4303,
             "proxyConfig": "proxy.conf.js",
             "disableHostCheck": false
           },
